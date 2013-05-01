@@ -1,0 +1,36 @@
+Content-Type: multipart/alternative; boundary="===============1172465887=="
+MIME-Version: 1.0
+Date: Tue, 23 Apr 2013 10:33:42 -0700
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+ h=x-received:mime-version:from:date:message-id:subject:to
+ :content-type; bh=sUm2O6gblN8nsrIwgsGSKjV+KPteVZuPqA/7EvJGfDw=;
+ b=oiOOzhcu48I2350KHGsiARIo/2+DZqSevUszr71al1OoVVtHyRow/jpytdjCrb1/8B
+ qaQkDJuyazYkY7woNwdC0PBQN8pC3wKh7IYaccU1bNHIeeeAGMZ1irLaASXZgVfI/rUq
+ KYfxPEbNNwZizYxq/KFYDPvb6lopAr8ef4ngontEx0umI98x8k2LuVuaLCp1w/gIxL6q
+ +7LiL8ISdm+9Txx140EX3zlk0VjYDkvZYAMEmniaGY+VOffilT9uHMTGG1GdmM4XX7J/
+ a1M1TGxXfKItZsp0XKQjgIQ//ZhKcT0ZrOeqOFGYZKAOjSo3aSlYioRI+5qNU5RKb9uP
+ DHCw==
+From: Tim Watts <coconutrandom@gmail.com>
+Message-Id: <CAOe+_5nTCsQ99UJB29JqXtS7BtQy5cOuAa-m-u-nJLbLc7UsZw@mail.gmail.com>
+Received: by mail-we0-f180.google.com with SMTP id x43so854410wey.25
+ for <test@pipe2.mailpipe.io>; Tue, 23 Apr 2013 11:00:30 -0700 (PDT)
+Subject: foo
+To: test <test@pipe2.mailpipe.io>
+X-Received: by 10.194.109.35 with SMTP id hp3mr63069421wjb.15.1366738442588;
+ Tue, 23 Apr 2013 10:34:02 -0700 (PDT)
+
+--===============1172465887==
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+bar
+
+--===============1172465887==
+MIME-Version: 1.0
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+<div dir="ltr">bar</div>
+
+--===============1172465887==--

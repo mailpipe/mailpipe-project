@@ -1,0 +1,16 @@
+<!DOCTYPE html>{% load staticfiles %}
+<head>
+  <title>MailPipe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet" media="screen"/>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <h1>mail|</h1>
+    </div>
+      {% block content %}
+      {% endblock content %}
+  </div>
+</body>

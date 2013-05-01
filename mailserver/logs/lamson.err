@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/home/tim/Envs/mailpipe/bin/lamson", line 7, in <module>
+    args.parse_and_run_command(sys.argv[1:], commands, default_command="help")
+  File "/home/tim/Envs/mailpipe/local/lib/python2.7/site-packages/modargs/args.py", line 381, in parse_and_run_command
+    command_module(mod, command, options, cli_options=cli_options)
+  File "/home/tim/Envs/mailpipe/local/lib/python2.7/site-packages/modargs/args.py", line 286, in command_module
+    function(**options)
+  File "/home/tim/Envs/mailpipe/local/lib/python2.7/site-packages/lamson/commands.py", line 122, in start_command
+    utils.start_server(pid, FORCE, chroot, chdir, uid, gid, umask, loader, debug)
+  File "/home/tim/Envs/mailpipe/local/lib/python2.7/site-packages/lamson/utils.py", line 114, in start_server
+    settings = settings_loader()
+  File "/home/tim/Envs/mailpipe/local/lib/python2.7/site-packages/lamson/commands.py", line 121, in <lambda>
+    loader = lambda: utils.import_settings(True, from_dir=os.getcwd(), boot_module=boot)
+  File "/home/tim/Envs/mailpipe/local/lib/python2.7/site-packages/lamson/utils.py", line 34, in import_settings
+    __import__(boot_module, globals(), locals())
+  File "/home/tim/mailpipe-project/mymailserver/config/boot.py", line 12, in <module>
+    settings.relay = Relay(host=settings.relay_config['host'], 
+AttributeError: 'module' object has no attribute 'relay_config'

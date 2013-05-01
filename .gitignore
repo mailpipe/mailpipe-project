@@ -1,8 +1,12 @@
 *.log
 *.pot
 local_settings.py
+local_urls.py
 *.py[cod]
+db
 
+static_root
+media_root
 mymailserver/run/
 mymailserver/logs/
 
