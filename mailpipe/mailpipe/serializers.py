@@ -8,6 +8,7 @@ class EmailSerializer(serializers.HyperlinkedModelSerializer):
     html = serializers.CharField()
     to = serializers.CharField()
     frm = serializers.CharField()
+    subject = serializers.CharField()
     date = serializers.DateTimeField()
     attachments = serializers.Field()
     route_url = serializers.HyperlinkedRelatedField(source='route', slug_field='name', view_name='route-detail')

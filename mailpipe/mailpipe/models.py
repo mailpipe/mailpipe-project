@@ -42,6 +42,7 @@ class Email(models.Model):
                 d[pl.get_content_type()] = pl.get_payload()
         d['attachments'] = attachments
         d['to'] = msg['To']
+        d['subject'] = msg['subject']
         d['from'] = msg['From']
         d['date'] = msg['date']
         self.d = d
@@ -52,6 +53,9 @@ class Email(models.Model):
 
     def date(self):
         return self.payload().get('date', '')
+
+    def subject(self):
+        return self.payload().get('subject', '')
 
     def to(self):
         return self.payload().get('to', '')

@@ -9,36 +9,6 @@ $ curl -d "password=YOUR_PASSWORD&username={{user.username}}" {{ request.get_hos
 {"token": "{{ user.auth_token.key }}"}
 </pre>
       </div>
-      {% for r in user.route_set.all %}
-        <div class="row">
-          <h1>{{ r.address }}</h1>
-          {{ r.callback_url }}
-          {% for e in r.email_set.all %}
-            <div>
-              <strong>To: </strong> {{ e.address }}@{{ e.host }}
-              <strong>Date:</strong> {{ e.parsed_message.date }}
-              <strong>Subject:</strong> {{ e.parsed_message.subject }}
-              <br>
-              <strong>Text: </strong>
-  <pre>{{ e.text }}</pre>
-              <br>
-              <strong>HTML: </strong>
-  <pre>{{ e.html }}</pre>
-              <br>
-              {% if e.attachments %}
-                <strong>Attachemnts:</strong>
-                <ul>
-                  {% for a in e.attachments %}
-                    <li>{{ a }}</li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      {% endfor %}
-    {% else %}
-
 
     {% endif %}
   {% endblock %}

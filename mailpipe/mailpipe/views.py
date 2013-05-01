@@ -10,7 +10,6 @@ from rest_framework import authentication
 from serializers import EmailSerializer, RouteIdSerializer, RouteSerializer
 
 
-@login_required
 def home(request, *args, **kwargs):
     emails = Email.objects.filter(route__name='test')
     return render(request, 'index.html', {'emails': emails})
