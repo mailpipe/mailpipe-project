@@ -28,7 +28,12 @@ $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36af
 ### List emails recived 
 ```
 $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-{"url": "http://example.com:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback", "emails": []}
+{
+    "url": "http://example.com:8000/routes/test",
+    "name": "test", "
+    callback_url": "http://my-other-site.com/callback", 
+    "emails": []
+}
 ```
 ### Send an email
 Email test@example.com
