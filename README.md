@@ -154,6 +154,9 @@ $ ./manage.py runserver 0.0.0.0:8000
 ```
 Open your browser and goto http://YOUR_HOST:8000 and sign in as your admin account you made above and follow the instructions.
 
+# Production
+I would recommend PostgreSQL, RabbitMQ, Nginx, uwsgi, and of course, serve everything over https
+
 # Authors
 @readevalprint
 
