@@ -7,8 +7,8 @@ db
 
 static_root
 media_root
-mailserver/run/
-mailserver/logs/
+mailserver/run/*
+*.err
 
 # C extensions
 *.so
