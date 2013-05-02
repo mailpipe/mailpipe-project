@@ -1,29 +1,94 @@
-### Goal
+# Goal
 Get notifications pushed to a callback url when an email matching your route is received. Provide an API to manage routes, callbacks, and emails.
 
-### Installation
+# Installation
 
 ```
+$ mkvirtualenv mailpipe
 $ git clone git://github.com/readevalprint/mailpipe-project.git
 cd ./mailpipe-project
 pip install -r requirements.txt
 ```
 
-### Setup
-TODO: explain how to run the webserver and mailserver
+# Setup
 
-### Usage
+## Start lamson on port 25
+First find your normal user id and group id
 
-1. Create a user
-1. Log in as that user
-1. Create a route and callback url
-1. Email that route (+(*.))?@YOUR_HOST
-1. Handle the callback on your server and request the corresponding email id
+```
+>>> import os
+>>> os.getuid()
+1001
+>>> os.getgid()
+1001
+>>> ^D
+```
 
-### Authors
+Start it as root, and givedrop to your user id form above
+```
+cd ./maileserver
+$ sudo `which lamson` start -uid 1001 -gid 1001 
+```
+## Verify it is running
+
+```
+$ telnet YOUR_HOST 25
+Trying IP_ADDRESS...
+Connected to YOUR_HOST.
+Escape character is '^]'.
+220 YOUR_HOST Python SMTP proxy version 0.2
+```
+Press ctr+]
+```
+^]
+telnet> close
+Connection closed.
+```
+
+# Add your local_settings.py for django 
+Specifically you need to set your SECRET_KEY
+See https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
+
+Here we are using Django to store message. This is not recoomended for production.
+See: http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#celerytut-broker
+```
+# mailpipe/local_settings.py 
+from settings import *
+
+INSTALLED_APPS += ('kombu.transport.django', )
+
+
+SECRET_KEY = 'CHANGE_ME'
+BROKER_URL = 'django://'
+```
+
+## Create your database
+By default we are using sqlite3 but you should alse change that when you deploy
+Go ahead and create your admin here too.
+```
+$ ./manage.py syncdb
+```
+
+## Start the message queue
+Leave this running.
+```
+./manage.py celeryd -l info
+```
+
+## Start the dev server
+Do this on a different session (byobu or screen is helpful) and don't forget to use your virtualenv
+```
+$ workon mailpipe
+$ cd mailpipe-project/mailpipe/
+$ ./manage.py runserver 0.0.0.0:8000
+```
+Open your browser and goto http://YOUR_HOST:8000
+and sign in as your admin account you made above and follow the instructions.
+
+# Authors
 @readevalprint
 
-### License
+# License
 The MIT License (MIT)
 
 Copyright (c) 2013 Timothy John Watts (readevalprint)
