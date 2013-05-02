@@ -1,6 +1,78 @@
 # Goal
 Get notifications pushed to a callback url when an email matching your route is received. Provide an API to manage routes, callbacks, and emails.
 
+# Usage
+
+### Get your token
+```
+$ curl -d "password=tim&username=password" example.com:8000/get_token/
+{"token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"}
+```
+### List routes (none at first)
+```
+$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+[]
+```
+
+### Make a new route
+```
+$ curl -X POST -d "name=test&callback_url=http://my-other-site.com/callback" \
+code.mailpipe.io:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+{"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}
+```
+### List your new route
+```
+$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+[{"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}]
+```
+### List emails recived 
+```
+$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+{"url": "http://code.mailpipe.io:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback", "emails": []}
+```
+### Send an email
+Email test@example.com
+```
+$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+{
+    "url": "http://example:8000/routes/test", 
+    "name": "test", 
+    "callback_url": "http://my-other-site.com/callback", 
+    "emails": [
+        "http://example.com:8000/email/1"
+    ]
+}
+```
+### Callback
+Now http://my-other-site.com/callback will have been called with the email id, which you can can then retrieve.
+
+```
+$ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+{
+    "url": "http://example:8000/email/1", 
+    "id": 1, 
+    "text": "bar\n", 
+    "html": "<div dir=\"ltr\">bar</div>\n", 
+    "to": "\"test+something\" <test+something@example.com>", 
+    "frm": "Tim Watts <tim@readevalprint.com>", 
+    "subject": "foo", 
+    "date": "Tue, 30 Apr 2013 19:33:02 -0700", 
+    "attachments": [], 
+    "route_url": "http://example:8000/routes/test", 
+    "route": "test", 
+    "address": "test+something", 
+    "host": "example.com", 
+    "message": "Content-Type: multipart/alternative; boundary=\   <====SNIP====>", 
+    "created_at": "2013-05-01T02:33:23.385Z"
+}
+```
+### Delete the email
+Now that you have read and done stuff to your email, you want to delete it.
+```
+$ curl -X DELETE http://example:8000/email/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+```
+
+
 # Installation
 
 ```
@@ -12,9 +84,9 @@ pip install -r requirements.txt
 
 # Setup
 
-## Start lamson on port 25
+### Start lamson on port 25
 First find your normal user id and group id
-
+http://lamsonproject.org/
 ```
 >>> import os
 >>> os.getuid()
@@ -29,7 +101,7 @@ Start it as root, and givedrop to your user id form above
 cd ./maileserver
 $ sudo `which lamson` start -uid 1001 -gid 1001 
 ```
-## Verify it is running
+### Verify it is running
 
 ```
 $ telnet YOUR_HOST 25
@@ -45,7 +117,7 @@ telnet> close
 Connection closed.
 ```
 
-# Add your local_settings.py for django 
+### Add your local_settings.py for django 
 Specifically you need to set your SECRET_KEY
 See https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 
@@ -62,20 +134,20 @@ SECRET_KEY = 'CHANGE_ME'
 BROKER_URL = 'django://'
 ```
 
-## Create your database
+### Create your database
 By default we are using sqlite3 but you should alse change that when you deploy
 Go ahead and create your admin here too.
 ```
 $ ./manage.py syncdb
 ```
 
-## Start the message queue
+### Start the message queue
 Leave this running.
 ```
 ./manage.py celeryd -l info
 ```
 
-## Start the dev server
+### Start the dev server
 Do this on a different session (byobu or screen is helpful) and don't forget to use your virtualenv
 ```
 $ workon mailpipe
