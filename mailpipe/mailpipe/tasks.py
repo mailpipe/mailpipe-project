@@ -1,7 +1,5 @@
-from celery import Celery
+import celery
 import requests
-
-celery = Celery('tasks', broker='amqp://guest@localhost//')
 
 
 @celery.task(name='mailpipe.tasks.process_email')

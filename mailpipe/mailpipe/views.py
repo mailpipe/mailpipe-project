@@ -15,7 +15,7 @@ def home(request, *args, **kwargs):
     return render(request, 'index.html', {'emails': emails})
 
 
-class IsOwner(permissions.BasePermission):
+class IsRouteOwner(permissions.BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
     Assumes the model instance has an `owner` attribute.
@@ -23,13 +23,11 @@ class IsOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # Instance must have an attribute named `owner`.
-        return obj.route.owner == request.user
+        return obj.owner == request.user
 
 
 class RouteList(generics.ListCreateAPIView):
-    authentication_classes = (authentication.SessionAuthentication,
-                              authentication.TokenAuthentication)
-    permission_classes = (IsOwner,)
+    permission_classes = (permissions.IsAuthenticated, IsRouteOwner,)
     model = Route
     serializer_class = RouteIdSerializer
 
@@ -43,21 +41,8 @@ class RouteList(generics.ListCreateAPIView):
         return ['route-list.html']
 
 
-class IsRouteOwner(permissions.BasePermission):
-    """
-    Object-level permission to only allow owners of an object to edit it.
-    Assumes the model instance has an `owner` attribute.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        # Instance must have an attribute named `owner`.
-        return obj.owner == request.user
-
-
 class RouteDetail(generics.RetrieveDestroyAPIView):
-    authentication_classes = (authentication.SessionAuthentication,
-                              authentication.TokenAuthentication)
-    permission_classes = (IsRouteOwner,)
+    permission_classes = (permissions.IsAuthenticated, IsRouteOwner,)
     model = Route
     serializer_class = RouteSerializer
     slug_url_kwarg = 'name'
@@ -66,11 +51,19 @@ class RouteDetail(generics.RetrieveDestroyAPIView):
     def get_template_names(self):
         return ['route-detail.html']
 
+class IsOwner(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Instance must have an attribute named `owner`.
+        return obj.route.owner == request.user
+
 
 class EmailDetail(generics.RetrieveDestroyAPIView):
-    authentication_classes = (authentication.SessionAuthentication,
-                              authentication.TokenAuthentication)
-    permission_classes = (IsOwner,)
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
     model = Email
     serializer_class = EmailSerializer
 

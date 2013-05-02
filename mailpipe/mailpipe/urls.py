@@ -10,9 +10,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'mailpipe.views.home', name='home'),
-    url(r'^email/(?P<pk>[0-9]+)$', login_required(EmailDetail.as_view()), name='email-detail'),
-    url(r'^routes$', login_required(RouteList.as_view())),
-    url(r'^routes/(?P<name>[a-zA-Z0-9-_]+)$', login_required(RouteDetail.as_view()), name='route-detail'),
+    url(r'^email/(?P<pk>[0-9]+)$', EmailDetail.as_view(), name='email-detail'),
+    url(r'^routes$', RouteList.as_view()),
+    url(r'^routes/(?P<name>[a-zA-Z0-9-_]+)$', RouteDetail.as_view(), name='route-detail'),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^get_token/', 'rest_framework.authtoken.views.obtain_auth_token', name='get_token'),
 )
