@@ -31,34 +31,104 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Goal</h3>
+        <h1>Goal</h1>
 
 <p>Get notifications pushed to a callback url when an email matching your route is received. Provide an API to manage routes, callbacks, and emails.</p>
 
-<h3>Installation</h3>
+<h1>Installation</h1>
 
-<pre><code>$ git clone git://github.com/readevalprint/mailpipe-project.git
+<pre><code>$ mkvirtualenv mailpipe
+$ git clone git://github.com/readevalprint/mailpipe-project.git
 cd ./mailpipe-project
 pip install -r requirements.txt
 </code></pre>
 
-<h3>Setup</h3>
+<h1>Setup</h1>
 
-<p>TODO: explain how to run the webserver and mailserver</p>
+<h2>Start lamson on port 25</h2>
 
-<h3>Usage</h3>
+<p>First find your normal user id and group id</p>
 
-<ol>
-<li>Create a user</li>
-<li>Log in as that user</li>
-<li>Create a route and callback url</li>
-<li>Email that route (+(*.))?@YOUR_HOST</li>
-<li>Handle the callback on your server and request the corresponding email id</li>
-</ol><h3>Authors</h3>
+<pre><code>&gt;&gt;&gt; import os
+&gt;&gt;&gt; os.getuid()
+1001
+&gt;&gt;&gt; os.getgid()
+1001
+&gt;&gt;&gt; ^D
+</code></pre>
+
+<p>Start it as root, and givedrop to your user id form above</p>
+
+<pre><code>cd ./maileserver
+$ sudo `which lamson` start -uid 1001 -gid 1001 
+</code></pre>
+
+<h2>Verify it is running</h2>
+
+<pre><code>$ telnet YOUR_HOST 25
+Trying IP_ADDRESS...
+Connected to YOUR_HOST.
+Escape character is '^]'.
+220 YOUR_HOST Python SMTP proxy version 0.2
+</code></pre>
+
+<p>Press ctr+]</p>
+
+<pre><code>^]
+telnet&gt; close
+Connection closed.
+</code></pre>
+
+<h1>Add your local_settings.py for django</h1>
+
+<p>Specifically you need to set your SECRET_KEY
+See <a href="https://docs.djangoproject.com/en/dev/ref/settings/#secret-key">https://docs.djangoproject.com/en/dev/ref/settings/#secret-key</a></p>
+
+<p>Here we are using Django to store message. This is not recoomended for production.
+See: <a href="http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#celerytut-broker">http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#celerytut-broker</a></p>
+
+<pre><code># mailpipe/local_settings.py 
+from settings import *
+
+INSTALLED_APPS += ('kombu.transport.django', )
+
+
+SECRET_KEY = 'CHANGE_ME'
+BROKER_URL = 'django://'
+</code></pre>
+
+<h2>Create your database</h2>
+
+<p>By default we are using sqlite3 but you should alse change that when you deploy
+Go ahead and create your admin here too.</p>
+
+<pre><code>$ ./manage.py syncdb
+</code></pre>
+
+<h2>Start the message queue</h2>
+
+<p>Leave this running.</p>
+
+<pre><code>./manage.py celeryd -l info
+</code></pre>
+
+<h2>Start the dev server</h2>
+
+<p>Do this on a different session (byobu or screen is helpful) and don't forget to use your virtualenv</p>
+
+<pre><code>$ workon mailpipe
+$ cd mailpipe-project/mailpipe/
+$ ./manage.py runserver 0.0.0.0:8000
+</code></pre>
+
+<p>Open your browser and goto http://YOUR_HOST:8000
+and sign in as your admin account you made above and follow the instructions.</p>
+
+<h1>Authors</h1>
 
 <p><a href="https://github.com/readevalprint" class="user-mention">@readevalprint</a></p>
 
-<h3>License</h3>
+<h1>License</h1>
 
 <p>The MIT License (MIT)</p>
 
