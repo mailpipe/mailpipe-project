@@ -5,6 +5,8 @@ local_urls.py
 *.py[cod]
 db
 
+*.swp
+
 static_root
 media_root
 mailserver/run/*
