@@ -30,7 +30,7 @@ DATABASES = {
 # Set this in local_settings.py
 SECRET_KEY = ''
 
-ALLOWED_HOSTS = ['mailpipe.io']
+ALLOWED_HOSTS = []
 
 TIME_ZONE = 'UTC'
 

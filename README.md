@@ -5,7 +5,7 @@ Get notifications pushed to a callback url when an email matching your route is 
 
 ### Get your token
 ```
-$ curl -d "password=tim&username=password" example.com:8000/get_token/
+$ curl -d "username=tim&password=secret" example.com:8000/get_token/
 {"token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"}
 ```
 ### List routes (none at first)
@@ -17,7 +17,7 @@ $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36af
 ### Make a new route
 ```
 $ curl -X POST -d "name=test&callback_url=http://my-other-site.com/callback" \
-code.mailpipe.io:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+example.com:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}
 ```
 ### List your new route
@@ -28,7 +28,12 @@ $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36af
 ### List emails recived 
 ```
 $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-{"url": "http://code.mailpipe.io:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback", "emails": []}
+{
+    "url": "http://example.com:8000/routes/test",
+    "name": "test", "
+    callback_url": "http://my-other-site.com/callback", 
+    "emails": []
+}
 ```
 ### Send an email
 Email test@example.com
@@ -85,8 +90,7 @@ pip install -r requirements.txt
 # Setup
 
 ### Start lamson on port 25
-First find your normal user id and group id
-http://lamsonproject.org/
+First find your normal user id and group id. See http://lamsonproject.org/
 ```
 >>> import os
 >>> os.getuid()
@@ -118,7 +122,7 @@ Connection closed.
 ```
 
 ### Add your local_settings.py for django 
-Specifically you need to set your SECRET_KEY
+Specifically you need to set your SECRET_KEY. 
 See https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 
 Here we are using Django to store message. This is not recoomended for production.
@@ -135,8 +139,7 @@ BROKER_URL = 'django://'
 ```
 
 ### Create your database
-By default we are using sqlite3 but you should alse change that when you deploy
-Go ahead and create your admin here too.
+By default we are using sqlite3 but you should alse change that when you deploy. Go ahead and create your admin here too.
 ```
 $ ./manage.py syncdb
 ```
@@ -154,8 +157,10 @@ $ workon mailpipe
 $ cd mailpipe-project/mailpipe/
 $ ./manage.py runserver 0.0.0.0:8000
 ```
-Open your browser and goto http://YOUR_HOST:8000
-and sign in as your admin account you made above and follow the instructions.
+Open your browser and goto http://YOUR_HOST:8000 and sign in as your admin account you made above and follow the instructions.
+
+# Production
+I would recommend PostgreSQL, RabbitMQ, Nginx, uwsgi, and of course, serve everything over https
 
 # Authors
 @readevalprint
