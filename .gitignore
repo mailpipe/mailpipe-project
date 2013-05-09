@@ -8,6 +8,7 @@ db
 static_root
 media_root
 mailserver/run/*
+mailserver/logs
 *.err
 
 # C extensions
