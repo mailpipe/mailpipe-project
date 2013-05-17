@@ -9,9 +9,9 @@ from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
 
 
-class Route(models.Model):
+class EmailAccount(models.Model):
     owner = models.ForeignKey(User)
-    name = models.CharField(validators=[validate_slug],
+    address = models.CharField(validators=[validate_slug],
                             unique=True,
                             max_length=10)
     callback_url = models.URLField(blank=False)
@@ -19,9 +19,7 @@ class Route(models.Model):
 
 
 class Email(models.Model):
-    route = models.ForeignKey(Route, editable=False)
-    address = models.CharField(editable=False, max_length=254)
-    host = models.CharField(editable=False, max_length=253)
+    account = models.ForeignKey(EmailAccount, editable=False)
     message = models.TextField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -74,26 +72,14 @@ class Email(models.Model):
 
     @classmethod
     def create(cls, address, host, message):
-        name = address.split('+', 1)[0]
-        route = Route.objects.filter(name=name)
-        if not route:
+        address = address.split('+', 1)[0]
+        account = EmailAccount.objects.filter(address=address)
+        if not account:
             return None
-        route = route[0]  # This is ok because Routes are unique on name
-        email = cls.objects.create(route=route,
-                                   address=address,
-                                   host=host,
+        account = account[0]
+        email = cls.objects.create(account=account,
                                    message=message)
         return email
-
-
-def attachment_path(instance, filename):
-    return '/'.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in range(3)) + '/'
-
-
-class Attachment(models.Model):
-    email = models.ForeignKey(Email)
-    attachment = models.FileField(upload_to=attachment_path)
 
 
 @receiver(post_save, sender=User)

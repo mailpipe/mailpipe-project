@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
-from mailpipe.views import EmailDetail, RouteDetail, RouteList
+from mailpipe.views import EmailDetail, EmailAccountDetail, EmailAccountList
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
@@ -11,8 +11,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'mailpipe.views.home', name='home'),
     url(r'^email/(?P<pk>[0-9]+)$', EmailDetail.as_view(), name='email-detail'),
-    url(r'^routes$', RouteList.as_view()),
-    url(r'^routes/(?P<name>[a-zA-Z0-9-_]+)$', RouteDetail.as_view(), name='route-detail'),
+    url(r'^accounts$', EmailAccountList.as_view()),
+    url(r'^accounts/(?P<address>[a-zA-Z0-9-_]+)$', EmailAccountDetail.as_view(), name='email-account-detail'),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^get_token/', 'rest_framework.authtoken.views.obtain_auth_token', name='get_token'),
 )

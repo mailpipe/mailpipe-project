@@ -9,7 +9,7 @@ sys.path.append(here('../../../mailpipe'))
 from mailpipe import tasks
 
 
-@route("(address)@(host)", address=".+", host='pipe1.mailpipe.io')
+@route("(address)@(host)", address=".+")
 @stateless
 def QUEUE(message, address=None, host=None):
     tasks.process_email.delay(message=message, address=address, host=host)

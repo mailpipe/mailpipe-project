@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Email, Route
+from models import Email, EmailAccount
 
 
 class EmailSerializer(serializers.HyperlinkedModelSerializer):
@@ -11,8 +11,8 @@ class EmailSerializer(serializers.HyperlinkedModelSerializer):
     subject = serializers.CharField()
     date = serializers.DateTimeField()
     attachments = serializers.Field()
-    route_url = serializers.HyperlinkedRelatedField(source='route', slug_field='name', view_name='route-detail')
-    route = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    account_url = serializers.HyperlinkedRelatedField(source='account', slug_field='address', view_name='email-account-detail')
+    account = serializers.SlugRelatedField(read_only=True, slug_field='account')
 
 
     class Meta:
@@ -24,19 +24,19 @@ class EmailIdSerializer(serializers.Serializer):
     id = serializers.Field()
 
 
-class RouteIdSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='route-detail', slug_field='name')
+class EmailAccountIdSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', slug_field='address')
     emails = serializers.HyperlinkedRelatedField(source='email_set', many=True, view_name='email-detail')
 
     class Meta:
-        model = Route
-        fields = ('url','name', 'callback_url')
+        model = EmailAccount
+        fields = ('url','address', 'callback_url')
 
 
-class RouteSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='route-detail', slug_field='name')
+class EmailAccountSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', slug_field='address')
     emails = serializers.HyperlinkedRelatedField(source='email_set', many=True, view_name='email-detail')
 
     class Meta:
-        model = Route
-        fields = ('url','name', 'callback_url', 'emails')
+        model = EmailAccount
+        fields = ('url','address', 'callback_url', 'emails')
