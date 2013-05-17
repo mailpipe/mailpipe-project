@@ -11,9 +11,7 @@ from rest_framework.authtoken.models import Token
 
 class EmailAccount(models.Model):
     owner = models.ForeignKey(User)
-    address = models.CharField(validators=[validate_slug],
-                            unique=True,
-                            max_length=10)
+    address = models.EmailField(unique=True)
     callback_url = models.URLField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -71,8 +69,8 @@ class Email(models.Model):
         return email.message_from_string(self.message.encode('utf-8'))
 
     @classmethod
-    def create(cls, address, host, message):
-        address = address.split('+', 1)[0]
+    def create(cls, local, host, message):
+        address = local.split('+', 1)[0] + '@' + host
         account = EmailAccount.objects.filter(address=address)
         if not account:
             return None

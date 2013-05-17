@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^$', 'mailpipe.views.home', name='home'),
     url(r'^email/(?P<pk>[0-9]+)$', EmailDetail.as_view(), name='email-detail'),
     url(r'^accounts$', EmailAccountList.as_view()),
-    url(r'^accounts/(?P<address>[a-zA-Z0-9-_]+)$', EmailAccountDetail.as_view(), name='email-account-detail'),
+    url(r'^accounts/(?P<address>[a-zA-Z0-9-_@.]+)$', EmailAccountDetail.as_view(), name='email-account-detail'),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^get_token/', 'rest_framework.authtoken.views.obtain_auth_token', name='get_token'),
 )

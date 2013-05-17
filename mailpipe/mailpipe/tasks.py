@@ -3,9 +3,9 @@ import requests
 
 
 @celery.task(name='mailpipe.tasks.process_email')
-def process_email(message, address, host):
+def process_email(message, local, host):
     from models import Email
-    email = Email.create(message=message, address=address, host=host)
+    email = Email.create(message=message, local=local, host=host)
     notify_callback.delay(email.id)
     return email
 
@@ -24,6 +24,6 @@ def notify_callback(email_id, timeout=1):
             retry = False
     except:
         pass
-    if retry and timeout < 60 * 60:
+    if retry and timeout < 60 * 60: # TODO: Make setting
         notify_callback.apply_async([email_id], {'timeout': timeout*2}, countdown=timeout)
     return not retry
