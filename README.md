@@ -1,4 +1,6 @@
-# Goal
+# MailPipe
+[![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
+
 Get notifications pushed to a callback url when an email matching your route is received. Provide an API to manage routes, callbacks, and emails.
 
 # Usage
