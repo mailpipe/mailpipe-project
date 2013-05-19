@@ -1,7 +1,8 @@
 # MailPipe
 [![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
 
-Get notifications pushed to a callback url when an email matching your route is received. Provide an API to manage routes, callbacks, and emails.
+## Goal
+Get notifications pushed to a callback url when an email matching an account is received. Provide an API to manage email accounts, callbacks, and emails.
 
 # Usage
 
@@ -103,7 +104,7 @@ First find your normal user id and group id. See http://lamsonproject.org/
 >>> ^D
 ```
 
-Start it as root, and givedrop to your user id form above
+Start it as root, and give the uid and gid to drop to.
 ```
 cd ./maileserver
 $ sudo `which lamson` start -uid 1001 -gid 1001 
@@ -126,9 +127,11 @@ Connection closed.
 
 ### Add your local_settings.py for django 
 Specifically you need to set your SECRET_KEY. 
+
 See https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 
 Here we are using Django to store message. This is not recoomended for production.
+
 See: http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#celerytut-broker
 ```
 # mailpipe/local_settings.py 
