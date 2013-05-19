@@ -6,7 +6,8 @@ import requests
 def process_email(message, local, host):
     from models import Email
     email = Email.create(message=message, local=local, host=host)
-    notify_callback.delay(email.id)
+    if email:
+        notify_callback.delay(email.id)
     return email
 
 
@@ -19,7 +20,7 @@ def notify_callback(email_id, timeout=1):
     email = email[0]
     retry = True
     try:
-        r = requests.get(email.route.callback_url)
+        r = requests.get(email.account.callback_url)
         if r.status_code == 200:
             retry = False
     except:

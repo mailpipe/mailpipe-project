@@ -21,6 +21,8 @@ import os
 # os.environ["DJANGO_SETTINGS_MODULE"] = "mailpipe.settings"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mailpipe.settings")
 
+import djcelery
+djcelery.setup_loader()
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
@@ -31,5 +33,3 @@ application = get_wsgi_application()
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
 
-import djcelery
-djcelery.setup_loader()

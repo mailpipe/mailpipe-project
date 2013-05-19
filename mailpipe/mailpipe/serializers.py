@@ -12,7 +12,7 @@ class EmailSerializer(serializers.HyperlinkedModelSerializer):
     date = serializers.DateTimeField()
     attachments = serializers.Field()
     account_url = serializers.HyperlinkedRelatedField(source='account', slug_field='address', view_name='email-account-detail')
-    account = serializers.SlugRelatedField(read_only=True, slug_field='account')
+    account = serializers.SlugRelatedField(read_only=True, slug_field='address')
 
 
     class Meta:
