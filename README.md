@@ -12,15 +12,16 @@ $ curl -d "username=tim&password=secret" example.com:8000/get_token/
 ```
 ### List routes (none at first)
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 []
 ```
 
-### Make a new route
+### Make a new email account
+The host of the address can include any (sub)domain that is using this mailserver as the MX record.
 ```
-$ curl -X POST -d "name=test&callback_url=http://my-other-site.com/callback" \
+$ curl -X POST -d "address=test@example.com&callback_url=http://my-other-site.com/callback" \
 example.com:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-{"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}
+{"url": "http://example:8000/address/test@example.com", "address": "test@example.com", "callback_url": "http://my-other-site.com/callback"}
 ```
 ### List your new route
 ```
@@ -29,24 +30,24 @@ $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36af
 ```
 ### List emails recived 
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example.com:8000/routes/test",
-    "name": "test", "
-    callback_url": "http://my-other-site.com/callback", 
+    "url": "http://example.com:8000/accounts/test@example.com",
+    "address": "test@example.com",
+    "callback_url": "http://my-other-site.com/callback", 
     "emails": []
 }
 ```
 ### Send an email
 Email test@example.com
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/routes/test", 
-    "name": "test", 
+    "url": "http://example:8000/accounts/test@example.com", 
+    "address": "test@example.com",
     "callback_url": "http://my-other-site.com/callback", 
     "emails": [
-        "http://example.com:8000/email/1"
+        "http://example.com:8000/emails/1"
     ]
 }
 ```
@@ -56,7 +57,7 @@ Now http://my-other-site.com/callback will have been called with the email id, w
 ```
 $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/email/1", 
+    "url": "http://example:8000/emails/1", 
     "id": 1, 
     "text": "bar\n", 
     "html": "<div dir=\"ltr\">bar</div>\n", 
