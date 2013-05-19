@@ -9,7 +9,9 @@ Get notifications pushed to a callback url when an email matching an account is 
 ### Get your token
 ```
 $ curl -d "username=tim&password=secret" example.com:8000/get_token/
-{"token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"}
+{
+    "token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"
+}
 ```
 ### List routes (none at first)
 ```
@@ -22,12 +24,22 @@ The host of the address can include any (sub)domain that is using this mailserve
 ```
 $ curl -X POST -d "address=test@example.com&callback_url=http://my-other-site.com/callback" \
 example.com:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-{"url": "http://example:8000/address/test@example.com", "address": "test@example.com", "callback_url": "http://my-other-site.com/callback"}
+{
+    "url": "http://example:8000/address/test@example.com", 
+    "address": "test@example.com", 
+    "callback_url": "http://my-other-site.com/callback"
+}
 ```
 ### List your new route
 ```
 $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-[{"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}]
+[
+    {
+        "url": "http://example:8000/routes/test",
+        "name": "test",
+        "callback_url": "http://my-other-site.com/callback"
+    }
+]
 ```
 ### List emails recived 
 ```
@@ -49,7 +61,7 @@ $ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36
     "callback_url": "http://my-other-site.com/callback", 
     "emails": [
         "http://example.com:8000/emails/1"
-    ]
+        ]
 }
 ```
 ### Callback
@@ -67,7 +79,7 @@ $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36
     "subject": "foo", 
     "date": "Tue, 30 Apr 2013 19:33:02 -0700", 
     "attachments": [], 
-    "route_url": "http://example:8000/routes/test", 
+    "route_url": "http://example:8000/accounts/test", 
     "route": "test", 
     "address": "test+something", 
     "host": "example.com", 
