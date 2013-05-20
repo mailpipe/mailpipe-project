@@ -83,7 +83,6 @@ $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36
     "route": "test", 
     "address": "test+something", 
     "host": "example.com", 
-    "message": "Content-Type: multipart/alternative; boundary=\   <====SNIP====>", 
     "created_at": "2013-05-01T02:33:23.385Z"
 }
 ```
