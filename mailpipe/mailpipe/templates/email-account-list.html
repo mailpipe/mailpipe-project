@@ -2,18 +2,11 @@
 {% block content %}
   {% if user.is_authenticated %}
     <div class="row">
-      <h2>Get your token</h2>
-      Run this at the prompt to get the token you'll need for the next request
-      <pre>
-$ curl -d "password=YOUR_PASSWORD&username={{user.username}}" {{ request.get_host }}{% url 'get_token' %}
-{"token": "{{ user.auth_token.key }}"}
-</pre>
-      </div>
-      {% for r in user.route_set.all %}
+      {% for account in user.accounts.all %}
         <div class="row">
-          <h1>{{ r.address }}</h1>
-          {{ r.callback_url }}
-          {% for e in r.email_set.all %}
+          <h1>{{ account.address }}</h1>
+          {{ account.callback_url }}
+          {% for e in account.emails.all %}
             <div>
               <strong>To: </strong> {{ e.address }}@{{ e.host }}
               <strong>Date:</strong> {{ e.parsed_message.date }}

@@ -3,21 +3,21 @@ import string
 import random
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import validate_slug
+from django.core.validators import validate_slug, RegexValidator
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
 
 
 class EmailAccount(models.Model):
-    owner = models.ForeignKey(User)
-    address = models.EmailField(unique=True)
+    owner = models.ForeignKey(User, related_name="accounts")
+    address = models.EmailField(unique=True, validators=[RegexValidator(regex='^[^+]+$', message="Cannot contain labels")])
     callback_url = models.URLField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Email(models.Model):
-    account = models.ForeignKey(EmailAccount, editable=False)
+    account = models.ForeignKey(EmailAccount, editable=False, related_name='emails')
     message = models.TextField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

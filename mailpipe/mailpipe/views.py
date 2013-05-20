@@ -67,3 +67,14 @@ class EmailDetail(generics.RetrieveDestroyAPIView):
     def get_queryset(self):
         return Email.objects.filter(account__owner=self.request.user)
 
+class EmailList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    model = Email
+    serializer_class = serializers.EmailSerializer
+
+    def get_template_names(self):
+        return ['email-account-email-list.html']
+
+    def get_queryset(self):
+        return Email.objects.filter(account__owner=self.request.user)
+

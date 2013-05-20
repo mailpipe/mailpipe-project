@@ -17,7 +17,7 @@ class EmailSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Email
-
+        exclude = ('message', )
 
 
 class EmailIdSerializer(serializers.Serializer):
@@ -26,7 +26,7 @@ class EmailIdSerializer(serializers.Serializer):
 
 class EmailAccountIdSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', slug_field='address')
-    emails = serializers.HyperlinkedRelatedField(source='email_set', many=True, view_name='email-detail')
+    emails = serializers.HyperlinkedRelatedField(source='emails', many=True, view_name='email-detail')
 
     class Meta:
         model = EmailAccount
@@ -35,7 +35,7 @@ class EmailAccountIdSerializer(serializers.HyperlinkedModelSerializer):
 
 class EmailAccountSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', slug_field='address')
-    emails = serializers.HyperlinkedRelatedField(source='email_set', many=True, view_name='email-detail')
+    emails = serializers.HyperlinkedRelatedField(source='emails', many=True, view_name='email-detail')
 
     class Meta:
         model = EmailAccount

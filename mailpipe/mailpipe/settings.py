@@ -123,7 +123,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.TemplateHTMLRenderer',
+        'rest_framework.renderers.XMLRenderer',
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
 
 
 def custom_show_toolbar(request):
-    return request.REQUEST.get('ddtb', False) and DEBUG
+    return request.REQUEST.get('ddtb', False) and (DEBUG or request.user.is_superuser())
 
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,

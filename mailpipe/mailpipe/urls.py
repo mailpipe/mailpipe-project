@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
-from mailpipe.views import EmailDetail, EmailAccountDetail, EmailAccountList
+from mailpipe.views import EmailDetail, EmailAccountDetail, EmailAccountList, EmailList
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
@@ -10,15 +10,15 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'mailpipe.views.home', name='home'),
-    url(r'^email/(?P<pk>[0-9]+)$', EmailDetail.as_view(), name='email-detail'),
-    url(r'^accounts$', EmailAccountList.as_view()),
-    url(r'^accounts/(?P<address>[a-zA-Z0-9-_@.]+)$', EmailAccountDetail.as_view(), name='email-account-detail'),
+    url(r'^emails/$', EmailList.as_view(), name='email-list'),
+    url(r'^emails/(?P<pk>[0-9]+)/$', EmailDetail.as_view(), name='email-detail'),
+    url(r'^accounts/$', EmailAccountList.as_view(), name='email-account-list'),
+    url(r'^accounts/(?P<address>[^/]+)/$', EmailAccountDetail.as_view(), name='email-account-detail'),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^get_token/', 'rest_framework.authtoken.views.obtain_auth_token', name='get_token'),
 )
 
-urlpatterns = format_suffix_patterns(urlpatterns)
-
+urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'xml', 'api'])
 
 try:
     from local_urls import urlpatterns

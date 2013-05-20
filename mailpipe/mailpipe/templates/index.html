@@ -2,13 +2,67 @@
 {% block content %}
   {% if user.is_authenticated %}
     <div class="row">
-      <h2>Get your token</h2>
-      Run this at the prompt to get the token you'll need for the next request
-      <pre>
-$ curl -d "password=YOUR_PASSWORD&username={{user.username}}" {{ request.get_host }}{% url 'get_token' %}
-{"token": "{{ user.auth_token.key }}"}
-</pre>
+      <h2>Quick Start</h2>
+      <h3>Your API token</h3>
+      <pre>$ curl -d "password=YOUR_PASSWORD&username={{user.username}}" {{ request.build_absolute_uri|slice:":-1" }}{% url 'get_token' %}
+{"token": "{{ user.auth_token.key }}"} </pre>
       </div>
+      <div class="row">
+        <h3>Create an Account</h2>
+        <pre>$ curl -X POST -d "address=test@{{ request.get_host }}&callback_url=https://example.com/callback" \
+    {{ request.build_absolute_uri|slice:":-1" }}{% url 'email-account-list' %} -H 'Authorization: Token {{ user.auth_token.key }}' </pre>
+        </div>
 
-    {% endif %}
-  {% endblock %}
+        <div class="row">
+          <h3>Get the accounts</h2>
+        <pre>$ curl -X GET {{ request.build_absolute_uri|slice:":-1" }}{% url 'email-account-list' %} -H 'Authorization: Token {{ user.auth_token.key }}' </pre>
+          </div>
+
+          <div class="row">
+            <h3>Get emails</h2>
+        <pre>$ curl -X GET {{ request.build_absolute_uri|slice:":-1" }}{% url 'email-list' %} -H 'Authorization: Token {{ user.auth_token.key }}' </pre>
+            </div>
+
+            <div class="row">
+              <h3>Delete an email</h2>
+        <pre>$ curl -X DELETE {{ request.build_absolute_uri|slice:":-1" }}{% url 'email-detail' pk=1 %} -H 'Authorization: Token {{ user.auth_token.key }}' </pre>
+              </div>
+
+              <div class="row">
+                <h2>Your data</h2>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Email Account</th>
+                      <th>Callback</th>
+                      <th>Emails</th>
+                      <th>Url</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for account in request.user.accounts.all %}
+                      <tr>
+                        <td>
+                          <a href="mailto:{{ account.address }}" target="blank">
+                            {{ account.address }}
+                          </a>
+                        </td>
+                        <td>
+                          {{ account.callback_url }}
+                        </td>
+                        <td>
+                          {{ account.emails.count }}
+                        </td>
+                        <td>
+                          <a href="{% url 'email-account-detail' address=account.address %}">
+                            {{ request.build_absolute_uri|slice:":-1" }}{% url 'email-account-detail' address=account.address %}
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+            {% endif %}
+          {% endblock %}

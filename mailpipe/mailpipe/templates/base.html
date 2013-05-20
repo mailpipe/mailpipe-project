@@ -32,8 +32,12 @@
               <div class="container-fluid">
                 <a class="brand" href="/">
                   MailPipe|
-                    <small class="muted">An Open Source email to REST api project</small>
+                  <small class="muted">An Open Source email to REST api project</small>
                 </a>
+                <ul class="nav">
+                  <li> <a href="{% url 'email-list' %}">All Emails</a></li>
+                  <li> <a href="{% url 'email-account-list' %}">All Accounts</a></li>
+                </ul>
                 <ul class="nav pull-right">
                   {% block userlinks %}
                     {% if user.is_authenticated %}
