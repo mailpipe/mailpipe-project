@@ -13,7 +13,7 @@ $ curl -d "username=tim&password=secret" example.com:8000/get_token/
     "token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"
 }
 ```
-### List routes (none at first)
+### List accounts (none at first)
 ```
 $ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 []
@@ -23,7 +23,7 @@ $ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36
 The host of the address can include any (sub)domain that is using this mailserver as the MX record.
 ```
 $ curl -X POST -d "address=test@example.com&callback_url=http://my-other-site.com/callback" \
-example.com:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+example.com:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
     "url": "http://example:8000/address/test@example.com", 
     "address": "test@example.com", 
