@@ -1,53 +1,67 @@
 # MailPipe
 [![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
 
-Get notifications pushed to a callback url when an email matching your route is received. Provide an API to manage routes, callbacks, and emails.
+## Goal
+Get notifications pushed to a callback url when an email matching an account is received. Provide an API to manage email accounts, callbacks, and emails.
 
 # Usage
 
 ### Get your token
 ```
 $ curl -d "username=tim&password=secret" example.com:8000/get_token/
-{"token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"}
+{
+    "token": "866ee9de3d36afc0d9d37dle0c901b53r4811623"
+}
 ```
-### List routes (none at first)
+### List accounts (none at first)
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 []
 ```
 
-### Make a new route
+### Make a new email account
+The host of the address can include any (sub)domain that is using this mailserver as the MX record.
 ```
-$ curl -X POST -d "name=test&callback_url=http://my-other-site.com/callback" \
-example.com:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-{"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}
+$ curl -X POST -d "address=test@example.com&callback_url=http://my-other-site.com/callback" \
+example.com:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+{
+    "url": "http://example:8000/address/test@example.com", 
+    "address": "test@example.com", 
+    "callback_url": "http://my-other-site.com/callback"
+}
 ```
 ### List your new route
 ```
 $ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
-[{"url": "http://example:8000/routes/test", "name": "test", "callback_url": "http://my-other-site.com/callback"}]
+[
+    {
+        "url": "http://example:8000/routes/test",
+        "name": "test",
+        "callback_url": "http://my-other-site.com/callback"
+    }
+]
 ```
 ### List emails recived 
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example.com:8000/routes/test",
-    "name": "test", "
-    callback_url": "http://my-other-site.com/callback", 
+    "url": "http://example.com:8000/accounts/test@example.com",
+    "address": "test@example.com",
+    "callback_url": "http://my-other-site.com/callback", 
     "emails": []
 }
 ```
 ### Send an email
 Email test@example.com
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/routes/test", 
-    "name": "test", 
+    "url": "http://example:8000/accounts/test@example.com", 
+    "address": "test@example.com",
     "callback_url": "http://my-other-site.com/callback", 
     "emails": [
-        "http://example.com:8000/email/1"
-    ]
+        "http://example.com:8000/emails/1"
+        ]
 }
 ```
 ### Callback
@@ -56,7 +70,7 @@ Now http://my-other-site.com/callback will have been called with the email id, w
 ```
 $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/email/1", 
+    "url": "http://example:8000/emails/1", 
     "id": 1, 
     "text": "bar\n", 
     "html": "<div dir=\"ltr\">bar</div>\n", 
@@ -65,11 +79,10 @@ $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36
     "subject": "foo", 
     "date": "Tue, 30 Apr 2013 19:33:02 -0700", 
     "attachments": [], 
-    "route_url": "http://example:8000/routes/test", 
+    "route_url": "http://example:8000/accounts/test", 
     "route": "test", 
     "address": "test+something", 
     "host": "example.com", 
-    "message": "Content-Type: multipart/alternative; boundary=\   <====SNIP====>", 
     "created_at": "2013-05-01T02:33:23.385Z"
 }
 ```
@@ -102,7 +115,7 @@ First find your normal user id and group id. See http://lamsonproject.org/
 >>> ^D
 ```
 
-Start it as root, and givedrop to your user id form above
+Start it as root, and give the uid and gid to drop to.
 ```
 cd ./maileserver
 $ sudo `which lamson` start -uid 1001 -gid 1001 
@@ -125,9 +138,11 @@ Connection closed.
 
 ### Add your local_settings.py for django 
 Specifically you need to set your SECRET_KEY. 
+
 See https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 
 Here we are using Django to store message. This is not recoomended for production.
+
 See: http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#celerytut-broker
 ```
 # mailpipe/local_settings.py 
