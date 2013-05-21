@@ -161,6 +161,21 @@ By default we are using sqlite3 but you should alse change that when you deploy.
 $ ./manage.py syncdb
 ```
 
+### Set your Django Site
+Here you will want to use the host and port your server is using that is public on the internet.
+```
+$ ./manage.py shell_plus
+In [1]: s = Site.objects.get_current()
+
+In [2]: s.domain = 'http://exmaple.com:8000'
+
+In [3]: s.name = 'example.com'
+
+In [4]: s.save()
+
+In [5]: exit
+```
+
 ### Start the message queue
 Leave this running.
 ```
