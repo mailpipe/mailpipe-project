@@ -1,4 +1,4 @@
-# MailPipe
+# MailPipe - Make emails do stuff
 [![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
 
 ## Goal
@@ -15,7 +15,7 @@ $ curl -d "username=tim&password=secret" example.com:8000/get_token/
 ```
 ### List accounts (none at first)
 ```
-$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 []
 ```
 
@@ -25,29 +25,29 @@ The host of the address can include any (sub)domain that is using this mailserve
 $ curl -X POST -d "address=test@example.com&callback_url=http://my-other-site.com/callback" \
 example.com:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/address/test@example.com", 
+    "url": "http://example:8000/address/test@example.com/", 
     "address": "test@example.com", 
-    "callback_url": "http://my-other-site.com/callback"
+    "callback_url": "https://my-other-site.com/callback"
 }
 ```
-### List your new route
+### List your accounts
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 [
     {
-        "url": "http://example:8000/routes/test",
-        "name": "test",
-        "callback_url": "http://my-other-site.com/callback"
+        "url": "http://example:8000/accounts/test@example.com/",
+        "address": "test@example.com",
+        "callback_url": "https://my-other-site.com/callback"
     }
 ]
 ```
-### List emails recived 
+### List emails recived on your new account (none yet)
 ```
-$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts/test@example.com/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example.com:8000/accounts/test@example.com",
+    "url": "http://example.com:8000/accounts/test@example.com/",
     "address": "test@example.com",
-    "callback_url": "http://my-other-site.com/callback", 
+    "callback_url": "http://my-other-site.com/callback/", 
     "emails": []
 }
 ```
@@ -56,21 +56,21 @@ Email test@example.com
 ```
 $ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/accounts/test@example.com", 
+    "url": "http://example:8000/accounts/test@example.com/", 
     "address": "test@example.com",
     "callback_url": "http://my-other-site.com/callback", 
     "emails": [
-        "http://example.com:8000/emails/1"
+        "http://example.com:8000/emails/1/"
         ]
 }
 ```
 ### Callback
-Now http://my-other-site.com/callback will have been called with the email id, which you can can then retrieve.
+Now `https://my-other-site.com/callback?email_url=http://example.com:8000/emails/1/` will have been called which you can can now use to retrieve the email message.
 
 ```
-$ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/emails/1/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/emails/1", 
+    "url": "http://example:8000/emails/1/", 
     "id": 1, 
     "text": "bar\n", 
     "html": "<div dir=\"ltr\">bar</div>\n", 
@@ -89,7 +89,7 @@ $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36
 ### Delete the email
 Now that you have read and done stuff to your email, you want to delete it.
 ```
-$ curl -X DELETE http://example:8000/email/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X DELETE http://example:8000/email/1/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 ```
 
 
@@ -159,6 +159,21 @@ BROKER_URL = 'django://'
 By default we are using sqlite3 but you should alse change that when you deploy. Go ahead and create your admin here too.
 ```
 $ ./manage.py syncdb
+```
+
+### Set your Django Site
+Here you will want to use the host and port your server is using that is public on the internet.
+```
+$ ./manage.py shell_plus
+In [1]: s = Site.objects.get_current()
+
+In [2]: s.domain = 'http://exmaple.com:8000'
+
+In [3]: s.name = 'example.com'
+
+In [4]: s.save()
+
+In [5]: exit
 ```
 
 ### Start the message queue
