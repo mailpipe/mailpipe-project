@@ -1,4 +1,4 @@
-# MailPipe
+# MailPipe - Make emails do stuff
 [![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
 
 ## Goal
@@ -32,18 +32,18 @@ example.com:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901
 ```
 ### List your new route
 ```
-$ curl -X GET http://example:8000/routes -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 [
     {
-        "url": "http://example:8000/routes/test",
-        "name": "test",
+        "url": "http://example:8000/accounts/test",
+        "name": "test@example.com",
         "callback_url": "http://my-other-site.com/callback"
     }
 ]
 ```
 ### List emails recived 
 ```
-$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts/test@example.com/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
     "url": "http://example.com:8000/accounts/test@example.com",
     "address": "test@example.com",
