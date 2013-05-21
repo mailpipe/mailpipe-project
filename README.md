@@ -65,7 +65,7 @@ $ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36
 }
 ```
 ### Callback
-Now https://my-other-site.com/callback will have been called with the `email_url`, which you can can then retrieve.
+Now `https://my-other-site.com/callback?email_url=http://example.com:8000/emails/1/` will have been called which you can can now use to retrieve the email message.
 
 ```
 $ curl -X GET http://example:8000/emails/1/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
