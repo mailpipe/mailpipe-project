@@ -15,7 +15,7 @@ $ curl -d "username=tim&password=secret" example.com:8000/get_token/
 ```
 ### List accounts (none at first)
 ```
-$ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/accounts/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 []
 ```
 
@@ -25,9 +25,9 @@ The host of the address can include any (sub)domain that is using this mailserve
 $ curl -X POST -d "address=test@example.com&callback_url=http://my-other-site.com/callback" \
 example.com:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/address/test@example.com", 
+    "url": "http://example:8000/address/test@example.com/", 
     "address": "test@example.com", 
-    "callback_url": "http://my-other-site.com/callback"
+    "callback_url": "https://my-other-site.com/callback"
 }
 ```
 ### List your accounts
@@ -35,19 +35,19 @@ example.com:8000/accounts -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901
 $ curl -X GET http://example:8000/accounts/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 [
     {
-        "url": "http://example:8000/accounts/test",
-        "name": "test@example.com",
-        "callback_url": "http://my-other-site.com/callback"
+        "url": "http://example:8000/accounts/test@example.com/",
+        "address": "test@example.com",
+        "callback_url": "https://my-other-site.com/callback"
     }
 ]
 ```
-### List emails recived 
+### List emails recived on your new account (none yet)
 ```
 $ curl -X GET http://example:8000/accounts/test@example.com/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example.com:8000/accounts/test@example.com",
+    "url": "http://example.com:8000/accounts/test@example.com/",
     "address": "test@example.com",
-    "callback_url": "http://my-other-site.com/callback", 
+    "callback_url": "http://my-other-site.com/callback/", 
     "emails": []
 }
 ```
@@ -65,12 +65,12 @@ $ curl -X GET http://example:8000/accounts -H 'Authorization: Token 866ee9de3d36
 }
 ```
 ### Callback
-Now http://my-other-site.com/callback will have been called with the email id, which you can can then retrieve.
+Now https://my-other-site.com/callback will have been called with the `email_url`, which you can can then retrieve.
 
 ```
-$ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X GET http://example:8000/emails/1/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 {
-    "url": "http://example:8000/emails/1", 
+    "url": "http://example:8000/emails/1/", 
     "id": 1, 
     "text": "bar\n", 
     "html": "<div dir=\"ltr\">bar</div>\n", 
@@ -89,7 +89,7 @@ $ curl -X GET http://example:8000/emails/1 -H 'Authorization: Token 866ee9de3d36
 ### Delete the email
 Now that you have read and done stuff to your email, you want to delete it.
 ```
-$ curl -X DELETE http://example:8000/email/1 -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
+$ curl -X DELETE http://example:8000/email/1/ -H 'Authorization: Token 866ee9de3d36afc0d9d37dle0c901b53r4811623'
 ```
 
 
