@@ -1,5 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404
+
 from models import Email, EmailAccount
 from django.http import Http404
 from rest_framework import generics
@@ -8,6 +11,8 @@ from rest_framework import renderers
 from rest_framework import permissions
 from rest_framework import authentication
 import serializers
+import base64
+
 
 def home(request, *args, **kwargs):
     emails = Email.objects.filter(account__address='test')
@@ -23,6 +28,12 @@ class IsEmailAccountOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
+
+
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Instance must have an attribute named `owner`.
+        return obj.account.owner == request.user
 
 
 class EmailAccountList(generics.ListCreateAPIView):
@@ -50,10 +61,26 @@ class EmailAccountDetail(generics.RetrieveDestroyAPIView):
     def get_template_names(self):
         return ['email-account-detail.html']
 
-class IsOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Instance must have an attribute named `owner`.
-        return obj.account.owner == request.user
+
+class Attachment(generics.GenericAPIView):
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+    def get(self, *args, **kwargs):
+        email_pk = kwargs['email_pk']
+        content_id = kwargs['content_id']
+        name = kwargs['name']
+        email = Email.objects.get(pk=email_pk, account__owner=self.request.user)
+        attachment = email.raw_attachments()[content_id]
+        if not attachment['filename'] == name:
+            return redirect('email-attachment',
+                            email_pk=email_pk,
+                            content_id=content_id,
+                            name=attachment['filename'])
+
+        response = HttpResponse(content=base64.b64decode(attachment['payload']))
+        response['Content-Type'] = attachment['content_type']
+        #response['Content-Disposition'] = 'attachment; filename=%s' % attachment['filename']
+        return response
 
 
 class EmailDetail(generics.RetrieveDestroyAPIView):

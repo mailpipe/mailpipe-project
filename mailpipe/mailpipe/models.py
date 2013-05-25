@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import validate_slug, RegexValidator
 from django.dispatch import receiver
+from django.core.urlresolvers import reverse
+from django.contrib.sites.models import get_current_site
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
 
@@ -27,13 +29,20 @@ class Email(models.Model):
             return self.d
         msg = self.parsed_message()
         d = {}
-        attachments = []
+        attachments = {}
         for pl in msg.walk():
             if pl.get_filename():
-                attachments += [{'filename': pl.get_filename(),
-                    'cid': pl.get('Content-Id', ''),
+                content_id = pl.get('X-Attachment-Id', '')
+                filename = pl.get_filename()
+                attachments[content_id]= {
+                    'filename': filename,
                     'content_type': pl.get_content_type(),
-                    'payload': pl.get_payload()}]
+                    'attachment_url': (get_current_site(None).domain +
+                                    reverse('email-attachment',
+                                            kwargs={'email_pk': self.pk,
+                                                    'name': filename,
+                                                    'content_id': content_id})),
+                    }
             elif pl.get_content_type() in ['text/html', 'text/plain']:
                 d[pl.get_content_type()] = pl.get_payload()
         d['attachments'] = attachments
@@ -61,6 +70,21 @@ class Email(models.Model):
 
     def text(self):
         return self.payload().get('text/plain', '')
+
+    def raw_attachments(self):
+        msg = self.parsed_message()
+        d = {}
+        attachments = {}
+        for pl in msg.walk():
+            if pl.get_filename():
+                content_id = pl.get('X-Attachment-Id', '')
+                filename = pl.get_filename()
+                attachments[content_id] = {
+                    'filename': filename,
+                    'content_type': pl.get_content_type(),
+                    'payload': pl.get_payload()}
+        return attachments
+
 
     def attachments(self):
         return self.payload()['attachments']

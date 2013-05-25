@@ -102,7 +102,11 @@ INSTALLED_APPS = (
     'rest_framework',
     'debug_toolbar',
     'rest_framework.authtoken',
+    'south',
 )
+
+MAILPIPE_CALLBACK_TIMEOUT_SECONDS = 60 * 60
+MAILPIPE_CALLBACK_RETRY_SECONDS = 60
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/auth/login/'

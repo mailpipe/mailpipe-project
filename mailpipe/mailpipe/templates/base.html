@@ -35,8 +35,10 @@
                   <small class="muted">An Open Source email to REST api project</small>
                 </a>
                 <ul class="nav">
-                  <li> <a href="{% url 'email-list' %}">All Emails</a></li>
-                  <li> <a href="{% url 'email-account-list' %}">All Accounts</a></li>
+                  {% if user.is_authenticated %}
+                    <li> <a href="{% url 'email-list' %}">All Emails</a></li>
+                    <li> <a href="{% url 'email-account-list' %}">All Accounts</a></li>
+                  {% endif %}
                 </ul>
                 <ul class="nav pull-right">
                   {% block userlinks %}
@@ -77,5 +79,6 @@
         <script src="{% static "rest_framework/js/prettify-min.js" %}"></script>
         <script src="{% static "rest_framework/js/default.js" %}"></script>
       {% endblock %}
+      <a href="https://github.com/readevalprint/mailpipe-project"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork me on GitHub"></a>
     </body>
     <html>
