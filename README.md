@@ -117,7 +117,7 @@ First find your normal user id and group id. See http://lamsonproject.org/
 
 Start it as root, and give the uid and gid to drop to.
 ```
-cd ./maileserver
+cd ./mailserver
 $ sudo `which lamson` start -uid 1001 -gid 1001 
 ```
 ### Verify it is running
