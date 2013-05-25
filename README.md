@@ -1,6 +1,7 @@
 # MailPipe - Make emails do stuff
 [![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
 
+Follow [@mailpipe](https://twitter.com/mailpipe) on twitter for updates!
 ## Goal
 Get notifications pushed to a callback url when an email matching an account is received. Provide an API to manage email accounts, callbacks, and emails.
 
