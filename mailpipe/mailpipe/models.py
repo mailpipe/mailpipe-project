@@ -36,6 +36,7 @@ class Email(models.Model):
                 filename = pl.get_filename()
                 attachments[content_id]= {
                     'filename': filename,
+                    'index': len(attachments) + 1,
                     'content_type': pl.get_content_type(),
                     'attachment_url': (get_current_site(None).domain +
                                     reverse('email-attachment',

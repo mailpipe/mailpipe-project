@@ -69,7 +69,7 @@ class Attachment(generics.GenericAPIView):
         email_pk = kwargs['email_pk']
         content_id = kwargs['content_id']
         name = kwargs['name']
-        email = Email.objects.get(pk=email_pk, account__owner=self.request.user)
+        email = get_object_or_404(Email, pk=email_pk, account__owner=self.request.user)
         attachment = email.raw_attachments()[content_id]
         if not attachment['filename'] == name:
             return redirect('email-attachment',
