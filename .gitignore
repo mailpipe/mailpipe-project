@@ -4,6 +4,8 @@ local_settings.py
 local_urls.py
 *.py[cod]
 db
+celerybeat-schedule
+celerybeat-schedule.*
 
 *.swp
 
