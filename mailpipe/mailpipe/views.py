@@ -8,7 +8,6 @@ from django.http import Http404
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import renderers
-from rest_framework import permissions
 from rest_framework import authentication
 import serializers
 import base64
@@ -19,25 +18,7 @@ def home(request, *args, **kwargs):
     return render(request, 'index.html', {'emails': emails})
 
 
-class IsEmailAccountOwner(permissions.BasePermission):
-    """
-    Object-level permission to only allow owners of an object to edit it.
-    Assumes the model instance has an `owner` attribute.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        # Instance must have an attribute named `owner`.
-        return obj.owner == request.user
-
-
-class IsOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Instance must have an attribute named `owner`.
-        return obj.account.owner == request.user
-
-
 class EmailAccountList(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticated, IsEmailAccountOwner,)
     model = EmailAccount
     serializer_class = serializers.EmailAccountIdSerializer
 
@@ -52,7 +33,6 @@ class EmailAccountList(generics.ListCreateAPIView):
 
 
 class EmailAccountDetail(generics.RetrieveDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated, IsEmailAccountOwner,)
     model = EmailAccount
     serializer_class = serializers.EmailAccountSerializer
     slug_url_kwarg = 'address'
@@ -63,8 +43,6 @@ class EmailAccountDetail(generics.RetrieveDestroyAPIView):
 
 
 class Attachment(generics.GenericAPIView):
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
-
     def get(self, *args, **kwargs):
         email_pk = kwargs['email_pk']
         content_id = kwargs['content_id']
@@ -84,7 +62,6 @@ class Attachment(generics.GenericAPIView):
 
 
 class EmailDetail(generics.RetrieveDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
     model = Email
     serializer_class = serializers.EmailSerializer
 
@@ -95,7 +72,6 @@ class EmailDetail(generics.RetrieveDestroyAPIView):
         return Email.objects.filter(account__owner=self.request.user)
 
 class EmailList(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
     model = Email
     serializer_class = serializers.EmailSerializer
 
