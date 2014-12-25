@@ -72,7 +72,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 )
 
@@ -100,9 +99,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'djcelery',
     'rest_framework',
-    'debug_toolbar',
     'rest_framework.authtoken',
-    'south',
 )
 
 MAILPIPE_CALLBACK_TIMEOUT_SECONDS = 60 * 60
@@ -130,9 +127,9 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.XMLRenderer',
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -141,12 +138,6 @@ REST_FRAMEWORK = {
     }
 
 
-def custom_show_toolbar(request):
-    return request.REQUEST.get('ddtb', False) and (DEBUG or request.user.is_superuser())
-
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-}
 
 try:
     from local_settings import *

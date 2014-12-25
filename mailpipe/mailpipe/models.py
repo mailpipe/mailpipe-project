@@ -67,10 +67,10 @@ class Email(models.Model):
         return self.payload().get('to', '')
 
     def html(self):
-        return self.payload().get('text/html', '')
+        return self.payload().get('text/html', '').decode('utf-8')
 
     def text(self):
-        return self.payload().get('text/plain', '')
+        return self.payload().get('text/plain', '').decode('utf-8')
 
     def raw_attachments(self):
         msg = self.parsed_message()
