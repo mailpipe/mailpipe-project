@@ -1,7 +1,7 @@
 from nose.tools import *
-from lamson.testing import *
+from salmon.testing import *
 import os
-from lamson import server
+from salmon import server
 
 relay = relay(port=8823)
 client = RouterConversation("somedude@localhost", "requests_tests")

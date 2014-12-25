@@ -11,6 +11,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'mailpipe.views.home', name='home'),
     url(r'^emails/$', EmailList.as_view(), name='email-list'),
     url(r'^emails/(?P<pk>[0-9]+)/$', EmailDetail.as_view(), name='email-detail'),

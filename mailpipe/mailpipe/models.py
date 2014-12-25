@@ -14,7 +14,7 @@ from rest_framework.authtoken.models import Token
 class EmailAccount(models.Model):
     owner = models.ForeignKey(User, related_name="accounts")
     address = models.EmailField(unique=True, validators=[RegexValidator(regex='^[^+]+$', message="Cannot contain labels")])
-    callback_url = models.URLField(blank=False)
+    callback_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

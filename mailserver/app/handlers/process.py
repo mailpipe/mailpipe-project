@@ -1,7 +1,7 @@
 import logging
 import sys
 import os
-from lamson.routing import route, stateless
+from salmon.routing import route, stateless
 
 here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 
@@ -17,7 +17,7 @@ celery = Celery()
 celery.conf.BROKER_URL = settings.BROKER_URL
 
 
-@route("(address)@(host)", address=".+")
+@route("(address)@(host)", address=".+", host='.+')
 @stateless
 def QUEUE(message, address=None, host=None):
     result = celery.send_task(tasks.process_email.name, kwargs={'message':message, 'local':address, 'host':host})

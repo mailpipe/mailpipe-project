@@ -23,6 +23,8 @@ def notify_callback(email_id, retry_seconds=None, default_retry_delay=60):
         if not email:
             return False
         email = email[0]
+        if not email.account.callback_url:
+            return False
         retry = True
         try:
             domain = Site.objects.get_current().domain
