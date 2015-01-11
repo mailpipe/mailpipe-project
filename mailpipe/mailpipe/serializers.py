@@ -10,7 +10,6 @@ class EmailSerializer(serializers.HyperlinkedModelSerializer):
     frm = serializers.CharField()
     subject = serializers.CharField()
     #date = serializers.DateTimeField()
-    #attachments = serializers.HyperlinkedRelatedField()
     account_url = serializers.HyperlinkedRelatedField(source='account',
             lookup_field='address',
             view_name='email-account-detail',
@@ -20,7 +19,7 @@ class EmailSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Email
-        exclude = ('message', )
+        fields = ('url', 'id', 'frm', 'to', 'subject', 'text', 'html', 'attachments', 'account_url', 'account', 'created_at')
 
 
 class EmailIdSerializer(serializers.Serializer):
@@ -29,16 +28,16 @@ class EmailIdSerializer(serializers.Serializer):
 
 class EmailAccountIdSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', lookup_field='address')
-    emails = serializers.HyperlinkedRelatedField(source='emails', many=True, view_name='email-detail', read_only=True)
+    emails = serializers.HyperlinkedRelatedField(many=True, view_name='email-detail', read_only=True)
 
     class Meta:
         model = EmailAccount
-        fields = ('url','address', 'callback_url')
+        fields = ('url','address', 'callback_url', 'emails')
 
 
 class EmailAccountSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', lookup_field='address')
-    emails = serializers.HyperlinkedRelatedField(source='emails', many=True, view_name='email-detail', read_only=True)
+    emails = serializers.HyperlinkedRelatedField(many=True, view_name='email-detail', read_only=True)
 
     class Meta:
         model = EmailAccount

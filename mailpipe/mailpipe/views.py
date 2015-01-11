@@ -19,7 +19,6 @@ def home(request, *args, **kwargs):
 
 
 class EmailAccountList(generics.ListCreateAPIView):
-    model = EmailAccount
     serializer_class = serializers.EmailAccountIdSerializer
 
     def pre_save(self, obj):
@@ -33,10 +32,11 @@ class EmailAccountList(generics.ListCreateAPIView):
 
 
 class EmailAccountDetail(generics.RetrieveDestroyAPIView):
-    model = EmailAccount
     serializer_class = serializers.EmailAccountSerializer
-    slug_url_kwarg = 'address'
-    slug_field = 'address'
+    lookup_field = 'address'
+
+    def get_queryset(self):
+        return EmailAccount.objects.filter(owner=self.request.user)
 
     def get_template_names(self):
         return ['email-account-detail.html']
@@ -46,7 +46,7 @@ class Attachment(generics.GenericAPIView):
     def get(self, *args, **kwargs):
         email_pk = kwargs['email_pk']
         content_id = kwargs['content_id']
-        name = kwargs['name']
+        name = kwargs.get('name', None)
         email = get_object_or_404(Email, pk=email_pk, account__owner=self.request.user)
         attachment = email.raw_attachments()[content_id]
         if not attachment['filename'] == name:
@@ -55,14 +55,13 @@ class Attachment(generics.GenericAPIView):
                             content_id=content_id,
                             name=attachment['filename'])
 
-        response = HttpResponse(content=base64.b64decode(attachment['payload']))
+        response = HttpResponse(attachment['payload'])
         response['Content-Type'] = attachment['content_type']
         #response['Content-Disposition'] = 'attachment; filename=%s' % attachment['filename']
         return response
 
 
 class EmailDetail(generics.RetrieveDestroyAPIView):
-    model = Email
     serializer_class = serializers.EmailSerializer
 
     def get_template_names(self):
@@ -72,7 +71,6 @@ class EmailDetail(generics.RetrieveDestroyAPIView):
         return Email.objects.filter(account__owner=self.request.user)
 
 class EmailList(generics.ListAPIView):
-    model = Email
     serializer_class = serializers.EmailSerializer
 
     def get_template_names(self):

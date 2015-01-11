@@ -38,14 +38,17 @@ class Email(models.Model):
                     'filename': filename,
                     'index': len(attachments) + 1,
                     'content_type': pl.get_content_type(),
-                    'attachment_url': (get_current_site(None).domain +
+                    'attachment_url': ('http://' + get_current_site(None).domain +
                                     reverse('email-attachment',
                                             kwargs={'email_pk': self.pk,
                                                     'name': filename,
                                                     'content_id': content_id})),
                     }
             elif pl.get_content_type() in ['text/html', 'text/plain']:
-                d[pl.get_content_type()] = pl.get_payload()
+                raw_payload = pl.get_payload()
+                if pl.get('Content-Transfer-Encoding') == 'base64':
+                    raw_payload = raw_payload.decode('base64')
+                d[pl.get_content_type()] = raw_payload
         d['attachments'] = attachments
         d['to'] = msg['To']
         d['subject'] = msg['subject']
@@ -80,10 +83,13 @@ class Email(models.Model):
             if pl.get_filename():
                 content_id = pl.get('X-Attachment-Id', '')
                 filename = pl.get_filename()
+                raw_attachment = pl.get_payload()
+                if pl.get('Content-Transfer-Encoding') == 'base64':
+                    raw_attachment = raw_attachment.decode('base64')
                 attachments[content_id] = {
                     'filename': filename,
                     'content_type': pl.get_content_type(),
-                    'payload': pl.get_payload()}
+                    'payload': raw_attachment}
         return attachments
 
 
