@@ -11,10 +11,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'mailpipe.views.home', name='home'),
     url(r'^emails/$', EmailList.as_view(), name='email-list'),
     url(r'^emails/(?P<pk>[0-9]+)/$', EmailDetail.as_view(), name='email-detail'),
+    url(r'^emails/(?P<email_pk>[0-9]+)/attachments/(?P<content_id>[^/]+)/$',
+        never_cache(Attachment.as_view()), name='email-attachment'),
     url(r'^emails/(?P<email_pk>[0-9]+)/attachments/(?P<content_id>[^/]+)/(?P<name>[^/]+)$',
         never_cache(Attachment.as_view()), name='email-attachment'),
     url(r'^accounts/$', EmailAccountList.as_view(), name='email-account-list'),
@@ -29,4 +30,6 @@ try:
     from local_urls import urlpatterns
 except ImportError as e:
     print('Could not load local_urls.py:')
+    import traceback
     print(e)
+    traceback.print_exc()
