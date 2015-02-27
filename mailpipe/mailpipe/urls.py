@@ -14,13 +14,12 @@ urlpatterns = patterns('',
     url(r'^$', 'mailpipe.views.home', name='home'),
     url(r'^emails/$', EmailList.as_view(), name='email-list'),
     url(r'^emails/(?P<pk>[0-9]+)/$', EmailDetail.as_view(), name='email-detail'),
-    url(r'^emails/(?P<email_pk>[0-9]+)/attachments/(?P<content_id>[^/]+)/$',
-        never_cache(Attachment.as_view()), name='email-attachment'),
     url(r'^emails/(?P<email_pk>[0-9]+)/attachments/(?P<content_id>[^/]+)/(?P<name>[^/]+)$',
         never_cache(Attachment.as_view()), name='email-attachment'),
     url(r'^accounts/$', EmailAccountList.as_view(), name='email-account-list'),
     url(r'^accounts/(?P<address>[^/]+)/$', EmailAccountDetail.as_view(), name='email-account-detail'),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+
     url(r'^get_token/', 'rest_framework.authtoken.views.obtain_auth_token', name='get_token'),
 )
 

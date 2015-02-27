@@ -32,7 +32,7 @@ class Email(models.Model):
         attachments = {}
         for pl in msg.walk():
             if pl.get_filename():
-                content_id = pl.get('X-Attachment-Id', '')
+                content_id = pl.get('X-Attachment-Id', None) or pl.get('Content-ID', None)
                 filename = pl.get_filename()
                 attachments[content_id]= {
                     'filename': filename,
@@ -81,7 +81,7 @@ class Email(models.Model):
         attachments = {}
         for pl in msg.walk():
             if pl.get_filename():
-                content_id = pl.get('X-Attachment-Id', '')
+                content_id = pl.get('X-Attachment-Id', None) or pl.get('Content-ID', None)
                 filename = pl.get_filename()
                 raw_attachment = pl.get_payload()
                 if pl.get('Content-Transfer-Encoding') == 'base64':
