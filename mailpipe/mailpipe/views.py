@@ -3,13 +3,13 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 
-from models import Email, EmailAccount
+from .models import Email, EmailAccount
 from django.http import Http404
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import renderers
 from rest_framework import authentication
-import serializers
+from . import serializers
 import base64
 
 
@@ -20,9 +20,6 @@ def home(request, *args, **kwargs):
 
 class EmailAccountList(generics.ListCreateAPIView):
     serializer_class = serializers.EmailAccountIdSerializer
-
-    def pre_save(self, obj):
-        obj.owner = self.request.user
 
     def get_queryset(self):
         return EmailAccount.objects.filter(owner=self.request.user)

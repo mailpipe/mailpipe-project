@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Email, EmailAccount
+from .models import Email, EmailAccount
 
 
 class EmailSerializer(serializers.HyperlinkedModelSerializer):
@@ -29,16 +29,28 @@ class EmailIdSerializer(serializers.Serializer):
 class EmailAccountIdSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', lookup_field='address')
     emails = serializers.HyperlinkedRelatedField(many=True, view_name='email-detail', read_only=True)
+    owner = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+        default=serializers.CurrentUserDefault())
+
+    def save(self, **kwargs):
+        """Include default for read_only `user` field"""
+        kwargs["owner"] = self.fields["owner"].get_default()
+        return super().save(**kwargs)
+
 
     class Meta:
         model = EmailAccount
-        fields = ('url','address', 'callback_url', 'emails')
+        fields = ('url','address', 'callback_url', 'emails', 'owner')
+        read_only_fields = ['owner']
 
 
-class EmailAccountSerializer(serializers.HyperlinkedModelSerializer):
+class EmailAccountSerializer(EmailAccountIdSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='email-account-detail', lookup_field='address')
     emails = serializers.HyperlinkedRelatedField(many=True, view_name='email-detail', read_only=True)
 
     class Meta:
         model = EmailAccount
-        fields = ('url','address', 'callback_url', 'emails')
+        fields = ('url','address', 'callback_url', 'emails', 'owner')
+        read_only_fields = ['owner']
+

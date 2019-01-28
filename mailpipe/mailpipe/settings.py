@@ -1,10 +1,10 @@
 # Django settings for mailpipe project.
 import os
 
-here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
-
 import djcelery
 djcelery.setup_loader()
+here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -65,7 +65,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.eggs.Loader',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,9 +79,6 @@ ROOT_URLCONF = 'mailpipe.urls'
 
 WSGI_APPLICATION = 'mailpipe.wsgi.application'
 
-TEMPLATE_DIRS = (
-
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -92,14 +89,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
+    # 3rd party
+    'django_extensions',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_celery_results',
     # apps
     'mailpipe',
 
-    # 3rd party
-    'django_extensions',
-    'djcelery',
-    'rest_framework',
-    'rest_framework.authtoken',
 )
 
 MAILPIPE_CALLBACK_TIMEOUT_SECONDS = 60 * 60
@@ -120,11 +117,28 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     )
 
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.XMLRenderer',
         ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -140,6 +154,7 @@ REST_FRAMEWORK = {
 
 
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     pass
+

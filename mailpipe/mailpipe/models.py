@@ -5,21 +5,22 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import validate_slug, RegexValidator
 from django.dispatch import receiver
-from django.core.urlresolvers import reverse
-from django.contrib.sites.models import get_current_site
+from django.urls import reverse
+from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
 
 
 class EmailAccount(models.Model):
-    owner = models.ForeignKey(User, related_name="accounts")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, db_index=True, on_delete=models.CASCADE)
     address = models.EmailField(unique=True, validators=[RegexValidator(regex='^[^+]+$', message="Cannot contain labels")])
     callback_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Email(models.Model):
-    account = models.ForeignKey(EmailAccount, editable=False, related_name='emails')
+    account = models.ForeignKey(EmailAccount, editable=False, related_name='emails', on_delete=models.CASCADE)
     message = models.TextField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -70,10 +71,10 @@ class Email(models.Model):
         return self.payload().get('to', '')
 
     def html(self):
-        return self.payload().get('text/html', '').decode('utf-8')
+        return self.payload().get('text/html', '')
 
     def text(self):
-        return self.payload().get('text/plain', '').decode('utf-8')
+        return self.payload().get('text/plain', '')
 
     def raw_attachments(self):
         msg = self.parsed_message()
@@ -97,7 +98,7 @@ class Email(models.Model):
         return self.payload()['attachments']
 
     def parsed_message(self):
-        return email.message_from_string(self.message.encode('utf-8'))
+        return email.message_from_string(self.message)
 
     @classmethod
     def create(cls, local, host, message):
