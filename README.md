@@ -1,5 +1,4 @@
 # MailPipe - Make emails do stuff
-[![Build Status](https://travis-ci.org/readevalprint/mailpipe-project.png?branch=master)](https://travis-ci.org/readevalprint/mailpipe-project)
 
 Follow [@mailpipe](https://twitter.com/mailpipe) on twitter for updates!
 ## Goal
@@ -105,8 +104,8 @@ pip install -r requirements.txt
 
 # Setup
 
-### Start lamson on port 25
-First find your normal user id and group id. See http://lamsonproject.org/
+### Start salmon on port 25
+First find your normal user id and group id. https://salmon-mail.readthedocs.io
 ```
 >>> import os
 >>> os.getuid()
@@ -119,7 +118,7 @@ First find your normal user id and group id. See http://lamsonproject.org/
 Start it as root, and give the uid and gid to drop to.
 ```
 cd ./mailserver
-$ sudo `which lamson` start -uid 1001 -gid 1001 
+$ sudo `which salmon` start -uid 1001 -gid 1001 
 ```
 ### Verify it is running
 
