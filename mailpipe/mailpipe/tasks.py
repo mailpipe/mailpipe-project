@@ -15,7 +15,7 @@ def process_email(message, local, host):
 def notify_callback(email_id, retry_seconds=None, default_retry_delay=60):
     try:
         from django.contrib.sites.models import Site
-        from django.core.urlresolvers import reverse
+        from django.core.urls import reverse
         from django.conf import settings
         retry_seconds = retry_seconds or getattr(
             settings, 'MAILPIPE_CALLBACK_RETRY_SECONDS', 60)

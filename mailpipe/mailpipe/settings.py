@@ -66,9 +66,9 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE = (
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -88,14 +88,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    # apps
+    'mailpipe',
 
     # 3rd party
     'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
     'django_celery_results',
-    # apps
-    'mailpipe',
 
 )
 
@@ -119,20 +119,22 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                    ],
+                "builtins": [
+                    ],
+                },
+            },
+        ]
 
 
 REST_FRAMEWORK = {
@@ -152,9 +154,9 @@ REST_FRAMEWORK = {
     }
 
 
-
-try:
-    from .local_settings import *
-except ImportError:
-    pass
-
+SECRET_KEY = 'aASDf#$g34g#$G34grvBevwBRg43@EVBRG$2fevBG4f3eqyjw^rtgnncv'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = {'pickle', 'json'}
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'

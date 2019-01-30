@@ -1,4 +1,5 @@
 BeautifulSoup
+django_celery_results
 CleverCSS
 Django
 Jinja2

@@ -13,7 +13,7 @@ from rest_framework.authtoken.models import Token
 
 
 class EmailAccount(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, db_index=True, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, db_index=True, on_delete=models.CASCADE, related_name='accounts')
     address = models.EmailField(unique=True, validators=[RegexValidator(regex='^[^+]+$', message="Cannot contain labels")])
     callback_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
