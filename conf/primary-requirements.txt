@@ -1,4 +1,6 @@
 BeautifulSoup
+sentry-sdk
+https://github.com/readevalprint/mezzanine/archive/readevalprint-django2-TOKEN_COMMENT.zip
 django_celery_results
 CleverCSS
 Django
@@ -41,3 +43,4 @@ salmon-mail
 six
 sqlparse
 wsgiref
+uwsgi

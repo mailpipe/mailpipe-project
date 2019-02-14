@@ -1,0 +1,32 @@
+version: '2'
+services:
+
+    mailpipe:
+        build: .
+        image: mailpipe
+        volumes:
+            - ./:/code
+            - ./mailpipe_home:/root/
+        hostname: mailpipe
+        environment:
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+        ports:
+            - "8000:8000"
+        command: "start_mailpipe"
+
+
+    mailserver:
+        build: .
+        image: mailserver
+        environment:
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+        volumes:
+            - ./:/code
+            - ./mailserver_home:/root/
+            - /code/mailserver/run/
+        hostname: mailserver
+        ports:
+            - "25:25"
+        command: "start_mailserver"
+
+

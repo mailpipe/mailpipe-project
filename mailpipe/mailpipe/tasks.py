@@ -2,16 +2,17 @@ import celery
 import requests
 
 
-@celery.task(name='mailpipe.tasks.process_email')
+#@celery.task(name='mailpipe.tasks.process_email')
 def process_email(message, local, host):
     from .models import Email
+    print(locals())
     email = Email.create(message=message, local=local, host=host)
     if email:
-        notify_callback.delay(email.id)
+        notify_callback(email.id)
     return email
 
 
-@celery.task(name='mailpipe.tasks.notify_callback')
+#@celery.task(name='mailpipe.tasks.notify_callback')
 def notify_callback(email_id, retry_seconds=None, default_retry_delay=60):
     try:
         from django.contrib.sites.models import Site

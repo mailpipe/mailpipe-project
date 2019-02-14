@@ -3,9 +3,9 @@
 # You may add additional parameters such as `username' and `password' if your
 # relay server requires authentication, `starttls' (boolean) or `ssl' (boolean)
 # for secure connections.
-relay_config = {'host': 'localhost', 'port': 8825}
+relay_config = {}
 
-receiver_config = {'host': 'localhost', 'port': 8823}
+receiver_config = {'host': '0.0.0.0', 'port': 25}
 
 handlers = ['app.handlers.sample']
 

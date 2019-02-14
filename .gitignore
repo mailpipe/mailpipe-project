@@ -1,3 +1,8 @@
+mailserver_home
+mailpipe_home
+*_settings.py
+
+
 *.log
 *.pot
 local_settings.py

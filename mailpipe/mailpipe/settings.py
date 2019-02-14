@@ -6,7 +6,12 @@ djcelery.setup_loader()
 here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 
 
-DEBUG = True
+if os.environ.get("DJANGO_DEBUG", "false") in ['1', 'true', 'True']:
+    DEBUG = True
+else:
+    DEBUG = False
+
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -17,14 +22,16 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': here('../db'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DATABASE_NAME', here('../db')),
+        'USER': os.environ.get('DATABASE_USER', ''),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DATABASE_HOST', ''),
+        'PORT': os.environ.get('DATABASE_PORT', ''),
     }
 }
+
+
 
 
 # Set this in local_settings.py
@@ -44,10 +51,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = here('../../media_root/')
-MEDIA_URL = '/media/'
-STATIC_ROOT = here('../../static_root/')
-STATIC_URL = '/static/'
+MEDIA_ROOT = here('../media_root/')
+MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
+STATIC_ROOT = here('../static_root/')
+STATIC_URL = os.environ.get('STATIC_URL', '/static/')
 
 STATICFILES_DIRS = (
     here('static'),
@@ -160,3 +167,4 @@ CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_ACCEPT_CONTENT = {'pickle', 'json'}
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_BROKER_URL = 'amqp://myuser:mypassword@rabbitmq:5672/myvhost'
