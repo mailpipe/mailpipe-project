@@ -67,6 +67,8 @@ EOF
     start_mailpipe )
         . /var/env/bin/activate
         cd /code/mailpipe
+        mkdir -p media_root
+        mkdir -p static_root
         python manage.py migrate --noinput
         python manage.py collectstatic --noinput
         uwsgi --ini /code/conf/uwsgi.ini
@@ -75,7 +77,7 @@ EOF
     start_mailserver )
         . /var/env/bin/activate
         cd /code/mailserver
-        rm ./run/stmp.pid
+        rm ./run/stmp.pid || echo "no existing pid to remove"
         salmon start 
 
     ;;

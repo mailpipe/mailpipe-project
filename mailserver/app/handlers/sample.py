@@ -4,6 +4,8 @@ import os
 from salmon.routing import route, stateless
 
 here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
+import logging
+
 
 sys.path.append(here('../../../mailpipe'))
 #os.environ['DJANGO_SETTINGS_MODULE'] = 'mailpipe.settings'
@@ -26,6 +28,5 @@ from mailpipe import tasks
 @route("(address)@(host)", address=".+", host='.+')
 @stateless
 def QUEUE(message, address=None, host=None):
-
-    result = tasks.process_email(**{'message':message, 'local':address, 'host':host})
+    result = tasks.process_email(**{'message':message.Data.decode(), 'local':address, 'host':host})
 

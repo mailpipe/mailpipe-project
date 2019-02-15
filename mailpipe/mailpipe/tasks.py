@@ -5,7 +5,6 @@ import requests
 #@celery.task(name='mailpipe.tasks.process_email')
 def process_email(message, local, host):
     from .models import Email
-    print(locals())
     email = Email.create(message=message, local=local, host=host)
     if email:
         notify_callback(email.id)
@@ -42,4 +41,5 @@ def notify_callback(email_id, retry_seconds=None, default_retry_delay=60):
                 [email_id], {'retry_seconds': retry_seconds}, countdown=retry_seconds)
         return not retry
     except Exception as exc:
-        raise notify_callback.retry(exc=exc)
+        print(exc)
+        #raise notify_callback.retry(exc=exc)

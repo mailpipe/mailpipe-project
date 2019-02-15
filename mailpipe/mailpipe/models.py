@@ -1,6 +1,7 @@
 import email
 import string
 import random
+import base64
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import validate_slug, RegexValidator
@@ -48,7 +49,7 @@ class Email(models.Model):
             elif pl.get_content_type() in ['text/html', 'text/plain']:
                 raw_payload = pl.get_payload()
                 if pl.get('Content-Transfer-Encoding') == 'base64':
-                    raw_payload = raw_payload.decode('base64')
+                    raw_payload = base64.b64decode(raw_payload.encode('ascii')).decode('ascii')
                 d[pl.get_content_type()] = raw_payload
         d['attachments'] = attachments
         d['to'] = msg['To']
@@ -86,7 +87,7 @@ class Email(models.Model):
                 filename = pl.get_filename()
                 raw_attachment = pl.get_payload()
                 if pl.get('Content-Transfer-Encoding') == 'base64':
-                    raw_attachment = raw_attachment.decode('base64')
+                    raw_attachment = base64.b64decode(raw_attachment)
                 attachments[content_id] = {
                     'filename': filename,
                     'content_type': pl.get_content_type(),

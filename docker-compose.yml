@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
 
     mailpipe:
@@ -9,9 +9,9 @@ services:
             - ./mailpipe_home:/root/
         hostname: mailpipe
         environment:
-            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-mailpipe.settings}
         ports:
-            - "8000:8000"
+            - "${MAILPIPE_HTTP_PORT:-8000}:8000"
         command: "start_mailpipe"
 
 
