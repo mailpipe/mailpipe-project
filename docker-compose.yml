@@ -24,7 +24,6 @@ services:
             - DJANGO_DEBUG=${DJANGO_DEBUG:-false}
         volumes:
             - ./:/code
-            - /code/mailserver/run/
         hostname: mailserver
         ports:
             - "${MAILPIPE_SMTP_PORT:-25}:8025"

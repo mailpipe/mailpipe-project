@@ -77,7 +77,7 @@ EOF
     start_mailserver )
         . /var/env/bin/activate
         cd /code/
-        python manage.py startmailserver 0.0.0.0:8025
+        python manage.py runmailserver 0.0.0.0:8025
 
     ;;
     pip_freeze )

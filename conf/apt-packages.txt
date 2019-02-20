@@ -1,3 +1,4 @@
+git
 python3-pip
 vim
 supervisor
