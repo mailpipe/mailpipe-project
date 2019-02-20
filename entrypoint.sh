@@ -30,11 +30,11 @@ pip_freeze() {
     rm -rf /root/.cache/pip/
     virtualenv -p python3 /tmp/env/
     rm -rf /code/dependencies/*
-    /tmp/env/bin/pip wheel -w /code/dependencies -r ./primary-requirements.txt
-    /tmp/env/bin/pip install -f /code/dependencies -r ./primary-requirements.txt --upgrade
+    /tmp/env/bin/pip wheel -w /code/dependencies -r ./conf/primary-requirements.txt
+    /tmp/env/bin/pip install -f /code/dependencies -r ./conf/primary-requirements.txt --upgrade
     set +x
-    echo -e "###\n# frozen requirements DO NOT CHANGE\n# To update this update 'primary-requirements.txt' then run ./entrypoint.sh pip_freeze\n###" | tee requirements.txt
-    /tmp/env/bin/pip freeze --local | grep -v appdir | tee -a requirements.txt
+    echo -e "###\n# frozen requirements DO NOT CHANGE\n# To update this update 'primary-requirements.txt' then run ./entrypoint.sh pip_freeze\n###" > ./conf/requirements.txt
+    /tmp/env/bin/pip freeze --local >> ./conf/requirements.txt
 
 }
 
@@ -66,7 +66,7 @@ EOF
     ;;
     start_mailpipe )
         . /var/env/bin/activate
-        cd /code/mailpipe
+        cd /code/
         mkdir -p media_root
         mkdir -p static_root
         python manage.py migrate --noinput
@@ -76,9 +76,8 @@ EOF
     ;;
     start_mailserver )
         . /var/env/bin/activate
-        cd /code/mailserver
-        rm ./run/stmp.pid || echo "no existing pid to remove"
-        salmon start 
+        cd /code/
+        python manage.py startmailserver 0.0.0.0:8025
 
     ;;
     pip_freeze )

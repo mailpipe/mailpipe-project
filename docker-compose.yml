@@ -9,7 +9,7 @@ services:
             - ./mailpipe_home:/root/
         hostname: mailpipe
         environment:
-            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-mailpipe.settings}
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-mailpipe_project.settings}
             - DJANGO_DEBUG=${DJANGO_DEBUG:-false}
         ports:
             - "${MAILPIPE_HTTP_PORT:-8000}:8000"
@@ -18,16 +18,16 @@ services:
 
     mailserver:
         build: .
-        image: mailserver
+        image: mailpipe
         environment:
-            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-mailpipe_project.settings}
+            - DJANGO_DEBUG=${DJANGO_DEBUG:-false}
         volumes:
             - ./:/code
-            - ./mailserver_home:/root/
             - /code/mailserver/run/
         hostname: mailserver
         ports:
-            - "25:25"
+            - "${MAILPIPE_SMTP_PORT:-25}:8025"
         command: "start_mailserver"
 
 
