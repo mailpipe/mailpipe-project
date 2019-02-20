@@ -13,9 +13,8 @@ RUN apt-get update -qq && cat /code/conf/apt-packages.txt | xargs apt-get -qq --
 
 RUN pip3 install virtualenv pip --upgrade
 
-#ADD dependencies /code/dependencies
 RUN virtualenv -p python3 /var/env/
-RUN /var/env/bin/pip install -r /code/conf/requirements.txt
+RUN /var/env/bin/pip install -f /code/conf/dependencies -r /code/conf/requirements.txt
 
 WORKDIR /code/
 
