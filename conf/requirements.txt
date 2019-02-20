@@ -21,10 +21,8 @@ django-lazysignup==2.0.0
 djangorestframework==3.9.1
 dnspython==1.16.0
 docutils==0.14
-filebrowser-safe==0.5.0
 flake8==3.6.0
 future==0.17.1
-grappelli-safe==0.5.1
 gunicorn==19.9.0
 httpie==1.0.2
 idna==2.8
@@ -35,7 +33,8 @@ kombu==4.2.2.post1
 lmtpd==6.0.0
 lockfile==0.12.2
 mccabe==0.6.1
-https://github.com/readevalprint/mezzanine/archive/readevalprint-django2-TOKEN_COMMENT.zip
+#https://github.com/readevalprint/mezzanine/archive/readevalprint-django2-TOKEN_COMMENT.zip
+https://github.com/stephenmcd/mezzanine/archive/master.zip
 sentry-sdk==0.6.9
 oauthlib==3.0.1
 parso==0.3.2

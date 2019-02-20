@@ -10,10 +10,10 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 from django.contrib import admin
+
 admin.autodiscover()
 urlpatterns = [
-    url('admin/', include(admin.site.urls)),
-
+    #url(r'^admin/',eadmin.site.urls),
     url(r'^$', home, name='home'),
     url(r'^emails/$', EmailList.as_view(), name='email-list'),
     url(r'^emails/(?P<pk>[0-9]+)/$', EmailDetail.as_view(), name='email-detail'),

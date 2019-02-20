@@ -6,7 +6,7 @@ djcelery.setup_loader()
 here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
 
 
-if os.environ.get("DJANGO_DEBUG", "false") in ['1', 'true', 'True']:
+if os.environ.get("DJANGO_DEBUG", "true") in ['1', 'true', 'True']:
     DEBUG = True
 else:
     DEBUG = False
@@ -38,6 +38,9 @@ DATABASES = {
 SECRET_KEY = ''
 
 ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS += ['*']
+
 
 TIME_ZONE = 'UTC'
 
@@ -129,7 +132,6 @@ TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'DIRS': [],
-            'APP_DIRS': True,
             'OPTIONS': {
                 'context_processors': [
                     'django.template.context_processors.debug',
@@ -139,6 +141,10 @@ TEMPLATES = [
                     ],
                 "builtins": [
                     ],
+                "loaders": [
+                    "django.template.loaders.filesystem.Loader",
+                    "django.template.loaders.app_directories.Loader",
+                    ]
                 },
             },
         ]
