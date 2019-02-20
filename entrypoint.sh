@@ -29,9 +29,9 @@ pip_freeze() {
     rm -rf /tmp/env
     rm -rf /root/.cache/pip/
     virtualenv -p python3 /tmp/env/
-    rm -rf /code/dependencies/*
-    /tmp/env/bin/pip wheel -w /code/dependencies -r ./conf/primary-requirements.txt
-    /tmp/env/bin/pip install -f /code/dependencies -r ./conf/primary-requirements.txt --upgrade
+    rm -rf ./conf/dependencies/*
+    /tmp/env/bin/pip wheel -w ./conf/dependencies -r ./conf/primary-requirements.txt
+    /tmp/env/bin/pip install -f ./conf/dependencies -r ./conf/primary-requirements.txt --upgrade
     set +x
     echo -e "###\n# frozen requirements DO NOT CHANGE\n# To update this update 'primary-requirements.txt' then run ./entrypoint.sh pip_freeze\n###" > ./conf/requirements.txt
     /tmp/env/bin/pip freeze --local >> ./conf/requirements.txt
