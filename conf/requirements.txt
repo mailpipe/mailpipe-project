@@ -17,7 +17,7 @@ idna==2.8
 ipython==7.3.0
 ipython-genutils==0.2.0
 jedi==0.13.2
-mailpipe==0.0.1
+-e git+https://github.com/readevalprint/mailpipe-app.git@2d3307e47fee2fa94064cfcdab4a9ab538d661ca#egg=mailpipe
 mccabe==0.6.1
 parso==0.3.4
 pep8==1.7.1

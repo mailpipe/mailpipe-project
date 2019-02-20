@@ -18,7 +18,7 @@ show_help() {
 
 setup_local_db() {
     set +e
-    cd /code/mailpipe
+    cd /code/
     /var/env/bin/python manage.py sqlcreate | psql -U $RDS_USERNAME -h $RDS_HOSTNAME
     set -e
     /var/env/bin/python manage.py migrate
@@ -41,7 +41,7 @@ pip_freeze() {
 
 case "$1" in
     manage )
-        cd /code/mailpipe
+        cd /code/
         /var/env/bin/python manage.py "${@:2}"
     ;;
     setuplocaldb )
@@ -52,7 +52,7 @@ case "$1" in
     ;;
     test_coverage)
         source /var/env/bin/activate
-        coverage run --rcfile="/code/.coveragerc" /code/mailpipe/manage.py test core "${@:2}"
+        coverage run --rcfile="/code/.coveragerc" /code/manage.py test core "${@:2}"
         coverage annotate --rcfile="/code/.coveragerc"
         coverage report --rcfile="/code/.coveragerc"
         cat << "EOF"

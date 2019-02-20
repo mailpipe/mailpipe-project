@@ -1,4 +1,4 @@
-https://github.com/readevalprint/mailpipe-app/archive/master.zip
+-e  git+https://github.com/readevalprint/mailpipe-app.git#egg=mailpipe
 sentry-sdk
 Django
 Werkzeug
